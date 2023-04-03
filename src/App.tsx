@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useMemo, useEffect } from "react";
+import "./App.css";
 
-function App() {
+import { useAudioRecorder } from "react-audio-voice-recorder";
+
+const App = () => {
+  const [recordData, setRecordData] = useState<Blob | null>(null);
+  const {
+    startRecording,
+    stopRecording,
+    togglePauseResume,
+    recordingBlob,
+    isRecording,
+    isPaused,
+  } = useAudioRecorder();
+
+  useEffect(() => {
+    if (recordingBlob) setRecordData(recordingBlob);
+  }, [recordingBlob]);
+
+  const audioSrc = useMemo(() => {
+    console.log("hhehehe");
+    if (recordData) return URL.createObjectURL(recordData);
+    else return "";
+  }, [recordData]);
+
+  console.log("audioSrc", audioSrc);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isRecording ? (
+        <>
+          {isPaused ? (
+            <button onClick={togglePauseResume}>resume</button>
+          ) : (
+            <button onClick={togglePauseResume}>pause</button>
+          )}
+          <button onClick={stopRecording}>stop</button>
+        </>
+      ) : (
+        <button onClick={startRecording}>play</button>
+      )}
+      <audio src={audioSrc} controls></audio>
     </div>
   );
-}
+};
 
 export default App;
