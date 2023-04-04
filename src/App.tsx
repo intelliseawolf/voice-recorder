@@ -1,7 +1,32 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
+import Webcam from "react-webcam";
 import "./App.css";
 
 import { useAudioRecorder } from "react-audio-voice-recorder";
+
+const WebcamCapture: React.FC = () => {
+  const webcamRef = useRef<Webcam>(null);
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    setImgSrc(imageSrc || null);
+  }, [webcamRef, setImgSrc]);
+
+  return (
+    <>
+      <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
+      <button onClick={capture}>Capture photo</button>
+      {imgSrc && <img src={imgSrc} alt="captured" />}
+    </>
+  );
+};
 
 const App = () => {
   const [recordData, setRecordData] = useState<Blob | null>(null);
@@ -38,6 +63,7 @@ const App = () => {
         <button onClick={startRecording}>play</button>
       )}
       <audio src={audioSrc} controls></audio>
+      <WebcamCapture />
     </div>
   );
 };
