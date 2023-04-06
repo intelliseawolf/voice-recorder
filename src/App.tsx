@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useEffect,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Webcam from "react-webcam";
 import { Button, Modal } from "react-bootstrap";
 import "./App.css";
@@ -51,7 +45,7 @@ const WebcamCapture: React.FC = () => {
 };
 
 const App = () => {
-  const [recordData, setRecordData] = useState<Blob | null>(null);
+  const [recordData, setRecordData] = useState<HTMLAudioElement | null>(null);
   const {
     startRecording,
     stopRecording,
@@ -61,14 +55,18 @@ const App = () => {
     isPaused,
   } = useAudioRecorder();
 
-  useEffect(() => {
-    if (recordingBlob) setRecordData(recordingBlob);
-  }, [recordingBlob]);
+  function playAudio() {
+    if (recordData) recordData.play();
+  }
 
-  const audioSrc = useMemo(() => {
-    if (recordData) return URL.createObjectURL(recordData);
-    else return "";
-  }, [recordData]);
+  useEffect(() => {
+    if (recordingBlob) {
+      const audio = document.createElement("audio");
+      audio.src = URL.createObjectURL(recordingBlob);
+      audio.controls = true;
+      setRecordData(audio);
+    }
+  }, [recordingBlob]);
 
   return (
     <div className="App">
@@ -85,7 +83,7 @@ const App = () => {
         ) : (
           <Button onClick={startRecording}>play</Button>
         )}
-        <audio src={audioSrc} controls></audio>
+        <Button onClick={playAudio}>Play audio</Button>
       </div>
       <WebcamCapture />
     </div>
