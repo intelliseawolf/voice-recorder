@@ -19,12 +19,9 @@ const App = () => {
   }, [recordingBlob]);
 
   const audioSrc = useMemo(() => {
-    console.log("hhehehe");
     if (recordData) return URL.createObjectURL(recordData);
     else return "";
   }, [recordData]);
-
-  console.log("audioSrc", audioSrc);
 
   return (
     <div className="App">
