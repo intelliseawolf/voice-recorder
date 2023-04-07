@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import Webcam from "react-webcam";
+import { Button } from "react-bootstrap";
 import "./App.css";
 
 import { useAudioRecorder } from "react-audio-voice-recorder";
@@ -22,7 +23,7 @@ const WebcamCapture: React.FC = () => {
   return (
     <>
       <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" />
-      <button onClick={capture}>Capture photo</button>
+      <Button onClick={capture}>Capture photo</Button>
       {imgSrc && <img src={imgSrc} alt="captured" />}
     </>
   );
@@ -53,14 +54,14 @@ const App = () => {
       {isRecording ? (
         <>
           {isPaused ? (
-            <button onClick={togglePauseResume}>resume</button>
+            <Button onClick={togglePauseResume}>resume</Button>
           ) : (
-            <button onClick={togglePauseResume}>pause</button>
+            <Button onClick={togglePauseResume}>pause</Button>
           )}
-          <button onClick={stopRecording}>stop</button>
+          <Button onClick={stopRecording}>stop</Button>
         </>
       ) : (
-        <button onClick={startRecording}>play</button>
+        <Button onClick={startRecording}>play</Button>
       )}
       <audio src={audioSrc} controls></audio>
       <WebcamCapture />
